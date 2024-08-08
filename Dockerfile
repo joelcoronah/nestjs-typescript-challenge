@@ -9,7 +9,7 @@ COPY package.json ./
 RUN npm install
 
 # Install global dependencies
-RUN npm install -g @nestjs/cli nodemon
+RUN npm install -g @nestjs/cli
 
 # Copy the rest of the application code
 COPY . .
@@ -21,7 +21,7 @@ RUN npm run build
 FROM base as dev
 
 # Default command for development
-CMD ["nodemon", "-L", "--watch", "src", "--exec", "npm", "run", "start:dev"]
+CMD ["npm", "run", "start:dev"]
 
 # Production stage
 FROM base as prod
