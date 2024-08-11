@@ -1,6 +1,6 @@
 service: nestjs-typescript-challenge
 
-frameworkVersion: "3"
+frameworkVersion: "4"
 
 useDotenv: true
 

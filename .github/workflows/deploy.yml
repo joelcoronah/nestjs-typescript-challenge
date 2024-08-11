@@ -22,11 +22,23 @@ jobs:
       - name: Install serverless globally
         run: npm install -g serverless
 
-      - name: Configure serverless authentication
-        run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
       - name: Install npm dependencies
         run: npm ci
 
-      - name: Deploy lambda function
-        run: sls deploy
+      - name: serverless plugin
+        run: serverless plugin install -n serverless-offline
+
+      - name: serverless deploy
+        uses: serverless/github-action@v3.2
+        with:
+          args: deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          PORT: ${{ vars.PORT }}
+          JWT_SECRET: ${{vars.JWT_SECRET}}
+          DB_HOST: ${{vars.DB_HOST}}
+          DB_PORT: ${{vars.DB_PORT}}
+          DB_USER: ${{vars.DB_USER}}
+          DB_PASS: ${{vars.DB_PASS}}
+          DB_DATABASE: ${{vars.DB_DATABASE}}
