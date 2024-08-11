@@ -30,7 +30,7 @@ provider:
 functions:
   main:
     image:
-      name: nestApp
+      name: nestapp
     events:
       - http:
           method: ANY
