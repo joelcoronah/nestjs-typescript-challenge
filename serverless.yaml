@@ -22,10 +22,15 @@ provider:
     DB_USER: ${env:DB_USER}
     DB_PASS: ${env:DB_PASS}
     DB_DATABASE: ${env:DB_DATABASE}
+  ecr:
+    images:
+      nestApp:
+        path: 474437561333.dkr.ecr.us-east-2.amazonaws.com/nest-challenge:latest
 
 functions:
   main:
-    handler: dist/serverless.handler
+    image:
+      name: nestApp
     events:
       - http:
           method: ANY

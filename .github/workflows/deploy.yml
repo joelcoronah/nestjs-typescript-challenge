@@ -29,6 +29,16 @@ jobs:
       - name: serverless plugin
         run: serverless plugin install -n serverless-offline
 
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 474437561333.dkr.ecr.us-east-2.amazonaws.com
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t nest-challenge .
+          docker tag nest-challenge:latest 474437561333.dkr.ecr.us-east-2.amazonaws.com/nest-challenge:latest
+          docker push 474437561333.dkr.ecr.us-east-2.amazonaws.com/nest-challenge:latest
+
       - name: serverless deploy
         uses: serverless/github-action@v3.2
         with:
