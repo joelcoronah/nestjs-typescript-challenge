@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -12,11 +14,16 @@ import { LocalAuthGuard } from './../guards/local-auth.guard';
 import { AuthService } from './../services/auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from '../enum/roles.enum';
+import { UsersService } from '../../users/services/users.service';
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UsersService,
+  ) {}
 
   @Post('register')
   @HttpCode(201)
@@ -81,5 +88,21 @@ export class AuthController {
   })
   async login(@Req() req) {
     return this.authService.login(req.user);
+  }
+
+  @Post('roles/:userId')
+  async assignRoleToUser(
+    @Param('userId') userId: number,
+    @Body('role') role: Roles,
+  ) {
+    return this.userService.addRoleToUser(userId, role);
+  }
+
+  @Delete('roles/:userId/remove/:role')
+  async removeRoleToUser(
+    @Param('userId') userId: number,
+    @Param('role') role: Roles,
+  ) {
+    return this.userService.removeRoleFromUser(userId, role);
   }
 }

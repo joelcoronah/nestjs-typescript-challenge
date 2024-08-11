@@ -46,8 +46,12 @@ export class User {
   })
   password: string;
 
-  @Column({ type: 'enum', enum: Roles, default: Roles.GUEST })
-  role: Roles;
+  @Column({
+    type: 'varchar',
+    name: 'roles',
+    default: 'guest',
+  })
+  private _roles: string;
 
   @CreateDateColumn({
     name: 'created_at',
@@ -69,4 +73,12 @@ export class User {
     default: null,
   })
   deletedAt: Date;
+
+  get roles(): Roles[] {
+    return this._roles.split(',') as Roles[];
+  }
+
+  set roles(roles: Roles[]) {
+    this._roles = roles.join(',');
+  }
 }

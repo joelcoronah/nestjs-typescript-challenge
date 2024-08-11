@@ -5,9 +5,9 @@ export class AddRolesMigration1723249188279 implements MigrationInterface {
     await queryRunner.addColumn(
       'users',
       new TableColumn({
-        name: 'role',
-        type: 'enum',
-        enum: ['admin', 'agent', 'customer', 'guest'],
+        name: 'roles',
+        type: 'varchar',
+        isNullable: false,
         default: "'guest'",
       }),
     );
