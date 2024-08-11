@@ -17,11 +17,11 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: Install nestjs
-        run: npm i -g @nestjs/cli
-
       - name: Install serverless globally
         run: npm install -g serverless
+
+      - name: Install nestjs
+        run: npm i -g @nestjs/cli
 
       - name: Install npm dependencies
         run: npm i
