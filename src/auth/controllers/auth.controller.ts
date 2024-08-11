@@ -14,8 +14,11 @@ import { LocalAuthGuard } from './../guards/local-auth.guard';
 import { AuthService } from './../services/auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../enum/roles.enum';
+import { Roles as RolesEnum } from '../enum/roles.enum';
 import { UsersService } from '../../users/services/users.service';
+import { RolesGuard } from '../guards/roles-auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { Roles } from '../decorators/roles.decorator';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -90,18 +93,22 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('roles/:userId')
   async assignRoleToUser(
     @Param('userId') userId: number,
-    @Body('role') role: Roles,
+    @Body('role') role: RolesEnum,
   ) {
     return this.userService.addRoleToUser(userId, role);
   }
 
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete('roles/:userId/remove/:role')
   async removeRoleToUser(
     @Param('userId') userId: number,
-    @Param('role') role: Roles,
+    @Param('role') role: RolesEnum,
   ) {
     return this.userService.removeRoleFromUser(userId, role);
   }
