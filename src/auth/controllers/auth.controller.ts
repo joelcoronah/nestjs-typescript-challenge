@@ -13,7 +13,13 @@ import {
 import { LocalAuthGuard } from './../guards/local-auth.guard';
 import { AuthService } from './../services/auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Roles as RolesEnum } from '../enum/roles.enum';
 import { UsersService } from '../../users/services/users.service';
 import { RolesGuard } from '../guards/roles-auth.guard';
@@ -124,6 +130,23 @@ export class AuthController {
       },
     },
   })
+  @ApiResponse({
+    status: 401,
+    description: 'User not allowed to access this route',
+    schema: {
+      example: {
+        statusCode: 401,
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description:
+      'Forbidden. Only users with the ADMIN role can access this endpoint.',
+  })
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Assign a role to a user. Requires ADMIN role.' })
   async assignRoleToUser(
     @Param('userId') userId: number,
     @Body('role') role: RolesEnum,
@@ -153,6 +176,16 @@ export class AuthController {
     },
   })
   @ApiResponse({
+    status: 401,
+    description: 'User not allowed to access this route',
+    schema: {
+      example: {
+        statusCode: 401,
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
     status: 404,
     description: 'User not found',
     schema: {
@@ -162,6 +195,13 @@ export class AuthController {
       },
     },
   })
+  @ApiResponse({
+    status: 403,
+    description:
+      'Forbidden. Only users with the ADMIN role can access this endpoint.',
+  })
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Assign a role to a user. Requires ADMIN role.' })
   async removeRoleToUser(
     @Param('userId') userId: number,
     @Param('role') role: RolesEnum,

@@ -34,16 +34,17 @@ export class UsersService {
         throw new Error('User not found');
       }
 
-      const roles = user.roles;
+      const roles = user._roles?.split(',') ?? [];
 
       if (!roles.includes(role)) {
         roles.push(role);
-        user.roles = roles;
+        user._roles = roles.join(',');
         await this.repository.save(user);
       }
 
       return user;
     } catch (error) {
+      console.log({ error });
       const message = error.message?.includes('User not found')
         ? 'USER_NOT_FOUND'
         : 'INTERNAL_SERVER_ERROR';
@@ -60,12 +61,12 @@ export class UsersService {
       throw new Error('User not found');
     }
 
-    const roles = user.roles;
+    const roles = user._roles?.split(',') ?? [];
 
     const index = roles.indexOf(role); // have the role
     if (index !== -1) {
       roles.splice(index, 1);
-      user.roles = roles;
+      user._roles = roles.join(',');
       await this.repository.save(user);
     }
 

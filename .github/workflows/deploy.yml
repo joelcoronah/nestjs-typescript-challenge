@@ -29,6 +29,20 @@ jobs:
       - name: Build application
         run: npm run build
 
+      - name: Run all unit tests
+        run: npm run test
+
+      - name: Run e2e tests
+        run: npm run test:e2e
+        env:
+          PORT: ${{ vars.PORT }}
+          JWT_SECRET: ${{vars.JWT_SECRET}}
+          DB_HOST: ${{vars.DB_HOST}}
+          DB_PORT: ${{vars.DB_PORT}}
+          DB_USER: ${{vars.DB_USER}}
+          DB_PASS: ${{vars.DB_PASS}}
+          DB_DATABASE: ${{vars.DB_DATABASE}}
+
       - name: serverless plugin
         run: serverless plugin install -n serverless-offline
 

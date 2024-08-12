@@ -51,7 +51,7 @@ export class User {
     name: 'roles',
     default: 'guest',
   })
-  private _roles: string;
+  _roles: string;
 
   @CreateDateColumn({
     name: 'created_at',
