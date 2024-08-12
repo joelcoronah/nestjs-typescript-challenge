@@ -96,6 +96,34 @@ export class AuthController {
   @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('roles/:userId')
+  @ApiResponse({
+    status: 201,
+    description: 'Add role to user',
+    schema: {
+      example: {
+        id: '2',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'email23@demo.com',
+        password:
+          '$2a$10$j77ljbkDKFxtLCswbnHEcu8HdFz80klrvx6xbcb6ETS4pNiFA7f1W',
+        _roles: 'guest,customer',
+        createAt: '2024-08-12T08:48:13.217Z',
+        updateAt: '2024-08-12T20:20:06.000Z',
+        deletedAt: null,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'USER_NOT_FOUND',
+      },
+    },
+  })
   async assignRoleToUser(
     @Param('userId') userId: number,
     @Body('role') role: RolesEnum,
@@ -106,6 +134,34 @@ export class AuthController {
   @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete('roles/:userId/remove/:role')
+  @ApiResponse({
+    status: 201,
+    description: 'Remove role',
+    schema: {
+      example: {
+        id: '2',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'email23@demo.com',
+        password:
+          '$2a$10$j77ljbkDKFxtLCswbnHEcu8HdFz80klrvx6xbcb6ETS4pNiFA7f1W',
+        _roles: 'guest,customer',
+        createAt: '2024-08-12T08:48:13.217Z',
+        updateAt: '2024-08-12T20:20:06.000Z',
+        deletedAt: null,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'USER_NOT_FOUND',
+      },
+    },
+  })
   async removeRoleToUser(
     @Param('userId') userId: number,
     @Param('role') role: RolesEnum,

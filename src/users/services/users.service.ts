@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../models/user.entity';
@@ -27,21 +27,30 @@ export class UsersService {
   }
 
   async addRoleToUser(userId: number, role: Roles): Promise<User> {
-    const user = await this.repository.findOneBy({ id: userId });
+    try {
+      const user = await this.repository.findOneBy({ id: userId });
 
-    if (!user) {
-      throw new Error('User not found');
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      const roles = user.roles;
+
+      if (!roles.includes(role)) {
+        roles.push(role);
+        user.roles = roles;
+        await this.repository.save(user);
+      }
+
+      return user;
+    } catch (error) {
+      const message = error.message?.includes('User not found')
+        ? 'USER_NOT_FOUND'
+        : 'INTERNAL_SERVER_ERROR';
+
+      const code = error.message?.includes('User not found') ? 404 : 500;
+      throw new HttpException(message, code);
     }
-
-    const roles = user.roles;
-
-    if (!roles.includes(role)) {
-      roles.push(role);
-      user.roles = roles;
-      await this.repository.save(user);
-    }
-
-    return user;
   }
 
   async removeRoleFromUser(userId: number, role: Roles): Promise<User> {
